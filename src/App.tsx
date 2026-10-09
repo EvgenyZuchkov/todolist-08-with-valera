@@ -100,7 +100,7 @@ export const App = () => {
 
 //Tasks
     const deleteTask = (todolistId: string, taskId: string) => {
-        setTasks({...tasks, [todolistId]: tasks[todolistId].filter(task => task.id !== taskId)})
+        // setTasks({...tasks, [todolistId]: tasks[todolistId].filter(task => task.id !== taskId)})
     }
 
     const createTask = (todolistId: string, title: string) => {
