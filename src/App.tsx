@@ -22,7 +22,7 @@ import {
     removeTodolistAC,
     todolistsReducer
 } from "./model/todolists-reducer.ts";
-import {tasksReducer} from "./model/tasks-reducer.ts";
+import {createTaskAC, deleteTaskAC, tasksReducer} from "./model/tasks-reducer.ts";
 
 export type Todolist = {
     id: string
@@ -46,7 +46,7 @@ export const App = () => {
     const todolistId1 = v1()
     const todolistId2 = v1()
 
-    const [todolists, dispatch] = useReducer(todolistsReducer, [
+    const [todolists, dispatch] = useReducer<Todolist[], any>(todolistsReducer, [
         {id: todolistId1, title: 'What to learn', filter: 'all'},
         {id: todolistId2, title: 'What to buy', filter: 'all'},
     ])
@@ -100,20 +100,21 @@ export const App = () => {
 
 //Tasks
     const deleteTask = (todolistId: string, taskId: string) => {
-        // setTasks({...tasks, [todolistId]: tasks[todolistId].filter(task => task.id !== taskId)})
+        dispatchTasks(deleteTaskAC({ todolistId, taskId }))
     }
 
     const createTask = (todolistId: string, title: string) => {
-        const newTask = {id: v1(), title, isDone: false}
-        setTasks({...tasks, [todolistId]: [newTask, ...tasks[todolistId]]})
+        // const newTask = {id: v1(), title, isDone: false}
+        // setTasks({...tasks, [todolistId]: [newTask, ...tasks[todolistId]]})
+        dispatchTasks(createTaskAC({todolistId, title}))
     }
 
     const changeTaskStatus = (todolistId: string, taskId: string, isDone: boolean) => {
-        setTasks({...tasks, [todolistId]: tasks[todolistId].map(task => task.id == taskId ? {...task, isDone} : task)})
+        // setTasks({...tasks, [todolistId]: tasks[todolistId].map(task => task.id == taskId ? {...task, isDone} : task)})
     }
 
     const changeTaskTitle = (todolistId: string, taskId: string, title: string) => {
-        setTasks({...tasks, [todolistId]: tasks[todolistId].map(task => task.id === taskId ? {...task, title} : task)})
+        // setTasks({...tasks, [todolistId]: tasks[todolistId].map(task => task.id === taskId ? {...task, title} : task)})
     }
 
     return (
