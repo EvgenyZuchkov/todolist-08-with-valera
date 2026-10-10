@@ -12,34 +12,34 @@ export const tasksReducer = (state = initialState, action: Actions): TasksState 
             const newState = {...state}
             delete newState[action.payload.id]
             return newState
-        case 'DELETE_TASK':
+        case 'DELETE_TASK': {
             const todolistId = action.payload.todolistId
             return {
                 ...state,
-                [todolistId]: state[todolistId].filter(t => t.id !== action.payload.taskId)
+                [todolistId]: (state[todolistId] ?? []).filter(t => t.id !== action.payload.taskId)
             }
+        }
         case 'CREATE_TASK': {
             const todolistId = action.payload.todolistId
             const newTask = {id: v1(), title: action.payload.title, isDone: false}
-            return {...state, [todolistId]: [newTask, ...state[todolistId]]}
+            return {...state, [todolistId]: [newTask, ...state[todolistId] ?? []]}
         }
         case 'CHANGE_TASK_STATUS': {
             const todolistId = action.payload.todolistId
             return {
                 ...state,
-                [todolistId]: state[todolistId].map(el => el.id === action.payload.taskId ? {
-                    ...el,
-                    isDone: action.payload.isDone
-                } : el)
+                [todolistId]: (state[todolistId] ?? []).map(el =>
+                    el.id === action.payload.taskId ? {...el, isDone: action.payload.isDone} : el
+                )
             }
         }
-        case 'CHANGE_TASK_TITLE' : {
+        case 'CHANGE_TASK_TITLE': {
             const todolistId = action.payload.todolistId
-            return {...state,
-                [todolistId]: state[todolistId].map(el => el.id === action.payload.taskId ? {
-                    ...el,
-                    title: action.payload.title
-                } : el)
+            return {
+                ...state,
+                [todolistId]: (state[todolistId] ?? []).map(el =>
+                    el.id === action.payload.taskId ? {...el, title: action.payload.title} : el
+                )
             }
         }
         default:
