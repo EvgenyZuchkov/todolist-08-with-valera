@@ -1,7 +1,6 @@
 import {TasksState} from "../App.tsx";
 import {AddTodolistAction, RemoveTodolistAction} from "./todolists-reducer.ts";
 import {v1} from "uuid";
-import {ac} from "vitest/dist/chunks/reporters.D7Jzd9GS";
 
 const initialState: TasksState = {}
 
@@ -26,10 +25,20 @@ export const tasksReducer = (state = initialState, action: Actions): TasksState 
         }
         case 'CHANGE_TASK_STATUS': {
             const todolistId = action.payload.todolistId
-            return {...state,
+            return {
+                ...state,
                 [todolistId]: state[todolistId].map(el => el.id === action.payload.taskId ? {
                     ...el,
                     isDone: action.payload.isDone
+                } : el)
+            }
+        }
+        case 'CHANGE_TASK_TITLE' : {
+            const todolistId = action.payload.todolistId
+            return {...state,
+                [todolistId]: state[todolistId].map(el => el.id === action.payload.taskId ? {
+                    ...el,
+                    title: action.payload.title
                 } : el)
             }
         }
@@ -43,10 +52,12 @@ type Actions = AddTodolistAction
     | DeleteTaskAction
     | CreateTaskAction
     | ChangeTaskStatusAction
+    | ChangeTaskTitleAction
 
 export type DeleteTaskAction = ReturnType<typeof deleteTaskAC>
 export type CreateTaskAction = ReturnType<typeof createTaskAC>
 export type ChangeTaskStatusAction = ReturnType<typeof changeTaskStatusAC>
+export type ChangeTaskTitleAction = ReturnType<typeof changeTaskTitleAC>
 
 export const deleteTaskAC = (payload: { todolistId: string, taskId: string }) => {
     return {
@@ -65,6 +76,13 @@ export const createTaskAC = (payload: { todolistId: string, title: string }) => 
 export const changeTaskStatusAC = (payload: { todolistId: string, taskId: string, isDone: boolean }) => {
     return {
         type: 'CHANGE_TASK_STATUS',
+        payload,
+    } as const
+}
+
+export const changeTaskTitleAC = (payload: { todolistId: string, taskId: string, title: string }) => {
+    return {
+        type: 'CHANGE_TASK_TITLE',
         payload,
     } as const
 }
